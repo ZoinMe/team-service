@@ -1,9 +1,10 @@
-package repository
+package team
 
 import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/ZoinMe/team-service/stores"
 	"time"
 
 	"github.com/ZoinMe/team-service/model"
@@ -13,11 +14,11 @@ type TeamRepository struct {
 	DB *sql.DB
 }
 
-func NewTeamRepository(db *sql.DB) *TeamRepository {
+func NewTeamRepository(db *sql.DB) stores.Team {
 	return &TeamRepository{DB: db}
 }
 
-func (tr *TeamRepository) GetAllTeams(ctx context.Context) ([]*model.Team, error) {
+func (tr *TeamRepository) GetAll(ctx context.Context) ([]*model.Team, error) {
 	query := "SELECT id, name, bio, profile_image_url, description, created_at, updated_at FROM teams"
 	rows, err := tr.DB.QueryContext(ctx, query)
 	if err != nil {
@@ -49,7 +50,7 @@ func (tr *TeamRepository) GetAllTeams(ctx context.Context) ([]*model.Team, error
 	return teams, nil
 }
 
-func (tr *TeamRepository) GetTeamByID(ctx context.Context, id int64) (*model.Team, error) {
+func (tr *TeamRepository) GetByID(ctx context.Context, id int64) (*model.Team, error) {
 	query := "SELECT id, name, bio, profile_image_url, description, created_at, updated_at FROM teams WHERE id = ?"
 	row := tr.DB.QueryRowContext(ctx, query, id)
 
@@ -69,7 +70,7 @@ func (tr *TeamRepository) GetTeamByID(ctx context.Context, id int64) (*model.Tea
 	return &team, nil
 }
 
-func (tr *TeamRepository) CreateTeam(ctx context.Context, team *model.Team) (*model.Team, error) {
+func (tr *TeamRepository) Create(ctx context.Context, team *model.Team) (*model.Team, error) {
 	team.CreatedAt = time.Now()
 	team.UpdatedAt = time.Now()
 
@@ -83,7 +84,7 @@ func (tr *TeamRepository) CreateTeam(ctx context.Context, team *model.Team) (*mo
 	return team, nil
 }
 
-func (tr *TeamRepository) UpdateTeam(ctx context.Context, updatedTeam *model.Team) (*model.Team, error) {
+func (tr *TeamRepository) Update(ctx context.Context, updatedTeam *model.Team) (*model.Team, error) {
 	updatedTeam.UpdatedAt = time.Now()
 
 	query := "UPDATE teams SET name=?, bio=?, profile_image_url=?, description=?, created_at=?, updated_at=? WHERE id=?"
@@ -94,7 +95,7 @@ func (tr *TeamRepository) UpdateTeam(ctx context.Context, updatedTeam *model.Tea
 	return updatedTeam, nil
 }
 
-func (tr *TeamRepository) DeleteTeam(ctx context.Context, id int64) error {
+func (tr *TeamRepository) Delete(ctx context.Context, id int64) error {
 	query := "DELETE FROM teams WHERE id = ?"
 	_, err := tr.DB.ExecContext(ctx, query, id)
 	if err != nil {

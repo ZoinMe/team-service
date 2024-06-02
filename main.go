@@ -2,44 +2,54 @@ package main
 
 import (
 	"database/sql"
+	request3 "github.com/ZoinMe/team-service/handler/request"
+	team3 "github.com/ZoinMe/team-service/handler/team"
+	teamUser3 "github.com/ZoinMe/team-service/handler/teamUser"
+	techstack3 "github.com/ZoinMe/team-service/handler/techstack"
+	request2 "github.com/ZoinMe/team-service/service/request"
+	team2 "github.com/ZoinMe/team-service/service/team"
+	teamUser2 "github.com/ZoinMe/team-service/service/teamUser"
+	techstack2 "github.com/ZoinMe/team-service/service/techstack"
+	"github.com/ZoinMe/team-service/stores/request"
+	"github.com/ZoinMe/team-service/stores/team"
+	"github.com/ZoinMe/team-service/stores/teamUser"
+	"github.com/ZoinMe/team-service/stores/techstack"
 	"log"
 	"net/http"
 
-	"github.com/ZoinMe/team-service/handler"
-	"github.com/ZoinMe/team-service/repository"
-	"github.com/ZoinMe/team-service/service"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
 	// Connect to the database
-	db, err := sql.Open("mysql", "root:ganesh123@tcp/zoinme?parseTime=true")
+	db, err := sql.Open("mysql", "root:password@tcp/zoinme?parseTime=true")
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
+
 	defer db.Close()
 
 	// Initialize Gin router
 	router := gin.Default()
 
 	// Initialize repositories
-	teamRepo := repository.NewTeamRepository(db)
-	teamUserRepo := repository.NewTeamUserRepository(db)
-	requestRepo := repository.NewRequestRepository(db)
-	techStackRepo := repository.NewTechStackRepository(db)
+	teamRepo := team.NewTeamRepository(db)
+	teamUserRepo := teamUser.NewTeamUserRepository(db)
+	requestRepo := request.NewRequestRepository(db)
+	techStackRepo := techstack.NewTechStackRepository(db)
 
 	// Initialize services
-	teamService := service.NewTeamService(teamRepo)
-	teamUserService := service.NewTeamUserService(teamUserRepo)
-	requestService := service.NewRequestService(requestRepo)
-	techStackService := service.NewTechStackService(techStackRepo)
+	teamService := team2.NewTeamService(teamRepo)
+	teamUserService := teamUser2.NewTeamUserService(teamUserRepo)
+	requestService := request2.NewRequestService(requestRepo)
+	techStackService := techstack2.NewTechStackService(techStackRepo)
 
 	// Initialize handlers
-	teamHandler := handler.NewTeamHandler(teamService)
-	teamUserHandler := handler.NewTeamUserHandler(teamUserService)
-	requestHandler := handler.NewRequestHandler(requestService)
-	techStackHandler := handler.NewTechStackHandler(techStackService)
+	teamHandler := team3.NewTeamHandler(teamService)
+	teamUserHandler := teamUser3.NewTeamUserHandler(teamUserService)
+	requestHandler := request3.NewRequestHandler(requestService)
+	techStackHandler := techstack3.NewTechStackHandler(techStackService)
 
 	// Define APIs for each entity
 	router.GET("/team", teamHandler.GetTeams)

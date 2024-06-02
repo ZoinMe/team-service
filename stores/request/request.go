@@ -1,9 +1,10 @@
-package repository
+package request
 
 import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/ZoinMe/team-service/stores"
 	"time"
 
 	"github.com/ZoinMe/team-service/model"
@@ -13,11 +14,11 @@ type RequestRepository struct {
 	DB *sql.DB
 }
 
-func NewRequestRepository(db *sql.DB) *RequestRepository {
+func NewRequestRepository(db *sql.DB) stores.Request {
 	return &RequestRepository{DB: db}
 }
 
-func (rr *RequestRepository) GetAllRequests(ctx context.Context) ([]*model.Request, error) {
+func (rr *RequestRepository) GetAll(ctx context.Context) ([]*model.Request, error) {
 	query := "SELECT id, user_id, team_id, status, sent_at FROM requests"
 	rows, err := rr.DB.QueryContext(ctx, query)
 	if err != nil {
@@ -47,7 +48,7 @@ func (rr *RequestRepository) GetAllRequests(ctx context.Context) ([]*model.Reque
 	return requests, nil
 }
 
-func (rr *RequestRepository) GetRequestByID(ctx context.Context, id uint) (*model.Request, error) {
+func (rr *RequestRepository) GetByID(ctx context.Context, id uint) (*model.Request, error) {
 	query := "SELECT id, user_id, team_id, status, sent_at FROM requests WHERE id = ?"
 	row := rr.DB.QueryRowContext(ctx, query, id)
 
@@ -65,7 +66,7 @@ func (rr *RequestRepository) GetRequestByID(ctx context.Context, id uint) (*mode
 	return &req, nil
 }
 
-func (rr *RequestRepository) CreateRequest(ctx context.Context, req *model.Request) (*model.Request, error) {
+func (rr *RequestRepository) Create(ctx context.Context, req *model.Request) (*model.Request, error) {
 	req.SentAt = time.Now()
 
 	query := "INSERT INTO requests (user_id, team_id, status, sent_at) VALUES (?, ?, ?, ?)"
@@ -78,7 +79,7 @@ func (rr *RequestRepository) CreateRequest(ctx context.Context, req *model.Reque
 	return req, nil
 }
 
-func (rr *RequestRepository) UpdateRequest(ctx context.Context, updatedReq *model.Request) (*model.Request, error) {
+func (rr *RequestRepository) Update(ctx context.Context, updatedReq *model.Request) (*model.Request, error) {
 	query := "UPDATE requests SET user_id=?, team_id=?, status=?, sent_at=? WHERE id=?"
 	_, err := rr.DB.ExecContext(ctx, query, updatedReq.UserID, updatedReq.TeamID, updatedReq.Status, updatedReq.SentAt, updatedReq.ID)
 	if err != nil {
@@ -87,7 +88,7 @@ func (rr *RequestRepository) UpdateRequest(ctx context.Context, updatedReq *mode
 	return updatedReq, nil
 }
 
-func (rr *RequestRepository) DeleteRequest(ctx context.Context, id uint) error {
+func (rr *RequestRepository) Delete(ctx context.Context, id uint) error {
 	query := "DELETE FROM requests WHERE id = ?"
 	_, err := rr.DB.ExecContext(ctx, query, id)
 	if err != nil {
@@ -96,7 +97,7 @@ func (rr *RequestRepository) DeleteRequest(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (rr *RequestRepository) GetRequestsByTeamID(ctx context.Context, teamID int64) ([]*model.Request, error) {
+func (rr *RequestRepository) GetByTeamID(ctx context.Context, teamID int64) ([]*model.Request, error) {
 	query := "SELECT id, user_id, team_id, status, sent_at FROM requests WHERE team_id = ?"
 	rows, err := rr.DB.QueryContext(ctx, query, teamID)
 	if err != nil {

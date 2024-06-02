@@ -1,25 +1,25 @@
-package handler
+package techstack
 
 import (
 	"fmt"
+	"github.com/ZoinMe/team-service/service/techstack"
 	"net/http"
 	"strconv"
 
 	"github.com/ZoinMe/team-service/model"
-	"github.com/ZoinMe/team-service/service"
 	"github.com/gin-gonic/gin"
 )
 
 type TechStackHandler struct {
-	techStackService *service.TechStackService
+	techStackService *techstack.TechStackService
 }
 
-func NewTechStackHandler(techStackService *service.TechStackService) *TechStackHandler {
+func NewTechStackHandler(techStackService *techstack.TechStackService) *TechStackHandler {
 	return &TechStackHandler{techStackService}
 }
 
 func (h *TechStackHandler) GetTechStacks(c *gin.Context) {
-	techStacks, err := h.techStackService.GetAllTechStacks(c.Request.Context())
+	techStacks, err := h.techStackService.GetAll(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -33,7 +33,7 @@ func (h *TechStackHandler) GetTechStackByID(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tech stack ID"})
 		return
 	}
-	techStack, err := h.techStackService.GetTechStackByID(c.Request.Context(), int64(techStackID))
+	techStack, err := h.techStackService.GetByID(c.Request.Context(), int64(techStackID))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Tech stack with ID %d not found", techStackID)})
 		return
@@ -47,7 +47,7 @@ func (h *TechStackHandler) CreateTechStack(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	newTechStack, err := h.techStackService.CreateTechStack(c.Request.Context(), &techStack)
+	newTechStack, err := h.techStackService.Create(c.Request.Context(), &techStack)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -67,7 +67,7 @@ func (h *TechStackHandler) UpdateTechStack(c *gin.Context) {
 		return
 	}
 	updatedTechStack.ID = int64(techStackID)
-	techStack, err := h.techStackService.UpdateTechStack(c.Request.Context(), &updatedTechStack)
+	techStack, err := h.techStackService.Update(c.Request.Context(), &updatedTechStack)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -81,7 +81,7 @@ func (h *TechStackHandler) DeleteTechStack(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tech stack ID"})
 		return
 	}
-	err = h.techStackService.DeleteTechStack(c.Request.Context(), int64(techStackID))
+	err = h.techStackService.Delete(c.Request.Context(), int64(techStackID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

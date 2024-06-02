@@ -1,9 +1,10 @@
-package repository
+package techstack
 
 import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/ZoinMe/team-service/stores"
 
 	"github.com/ZoinMe/team-service/model"
 )
@@ -12,11 +13,11 @@ type TechStackRepository struct {
 	DB *sql.DB
 }
 
-func NewTechStackRepository(db *sql.DB) *TechStackRepository {
+func NewTechStackRepository(db *sql.DB) stores.Techstack {
 	return &TechStackRepository{DB: db}
 }
 
-func (tr *TechStackRepository) GetAllTechStacks(ctx context.Context) ([]*model.TechStack, error) {
+func (tr *TechStackRepository) GetAll(ctx context.Context) ([]*model.TechStack, error) {
 	query := "SELECT id, technology, team_id FROM tech_stacks"
 	rows, err := tr.DB.QueryContext(ctx, query)
 	if err != nil {
@@ -44,7 +45,7 @@ func (tr *TechStackRepository) GetAllTechStacks(ctx context.Context) ([]*model.T
 	return techStacks, nil
 }
 
-func (tr *TechStackRepository) GetTechStackByID(ctx context.Context, id int64) (*model.TechStack, error) {
+func (tr *TechStackRepository) GetByID(ctx context.Context, id int64) (*model.TechStack, error) {
 	query := "SELECT id, technology, team_id FROM tech_stacks WHERE id = ?"
 	row := tr.DB.QueryRowContext(ctx, query, id)
 
@@ -60,7 +61,7 @@ func (tr *TechStackRepository) GetTechStackByID(ctx context.Context, id int64) (
 	return &techStack, nil
 }
 
-func (tr *TechStackRepository) CreateTechStack(ctx context.Context, techStack *model.TechStack) (*model.TechStack, error) {
+func (tr *TechStackRepository) Create(ctx context.Context, techStack *model.TechStack) (*model.TechStack, error) {
 	query := "INSERT INTO tech_stacks (technology, team_id) VALUES (?, ?)"
 	result, err := tr.DB.ExecContext(ctx, query, techStack.Technology, techStack.TeamID)
 	if err != nil {
@@ -71,7 +72,7 @@ func (tr *TechStackRepository) CreateTechStack(ctx context.Context, techStack *m
 	return techStack, nil
 }
 
-func (tsr *TechStackRepository) UpdateTechStack(ctx context.Context, updatedTechStack *model.TechStack) (*model.TechStack, error) {
+func (tsr *TechStackRepository) Update(ctx context.Context, updatedTechStack *model.TechStack) (*model.TechStack, error) {
 	query := "UPDATE tech_stacks SET technology=?, team_id=? WHERE id=?"
 	_, err := tsr.DB.ExecContext(ctx, query, updatedTechStack.Technology, updatedTechStack.TeamID, updatedTechStack.ID)
 	if err != nil {
@@ -80,7 +81,7 @@ func (tsr *TechStackRepository) UpdateTechStack(ctx context.Context, updatedTech
 	return updatedTechStack, nil
 }
 
-func (tr *TechStackRepository) DeleteTechStack(ctx context.Context, id int64) error {
+func (tr *TechStackRepository) Delete(ctx context.Context, id int64) error {
 	query := "DELETE FROM tech_stacks WHERE id = ?"
 	_, err := tr.DB.ExecContext(ctx, query, id)
 	if err != nil {

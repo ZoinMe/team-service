@@ -1,24 +1,24 @@
-package handler
+package teamUser
 
 import (
+	"github.com/ZoinMe/team-service/service/teamUser"
 	"net/http"
 	"strconv"
 
 	"github.com/ZoinMe/team-service/model"
-	"github.com/ZoinMe/team-service/service"
 	"github.com/gin-gonic/gin"
 )
 
 type TeamUserHandler struct {
-	teamUserService *service.TeamUserService
+	teamUserService *teamUser.TeamUserService
 }
 
-func NewTeamUserHandler(teamUserService *service.TeamUserService) *TeamUserHandler {
+func NewTeamUserHandler(teamUserService *teamUser.TeamUserService) *TeamUserHandler {
 	return &TeamUserHandler{teamUserService}
 }
 
 func (h *TeamUserHandler) GetTeamUsers(c *gin.Context) {
-	teamUsers, err := h.teamUserService.GetAllTeamUsers(c.Request.Context())
+	teamUsers, err := h.teamUserService.GetAll(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -32,7 +32,7 @@ func (h *TeamUserHandler) AddUserToTeam(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	newTeamUser, err := h.teamUserService.CreateTeamUser(c.Request.Context(), &teamUser)
+	newTeamUser, err := h.teamUserService.Create(c.Request.Context(), &teamUser)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -46,7 +46,7 @@ func (h *TeamUserHandler) RemoveUserFromTeam(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
 	}
-	err = h.teamUserService.DeleteTeamUser(c.Request.Context(), uint(userID))
+	err = h.teamUserService.Delete(c.Request.Context(), uint(userID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

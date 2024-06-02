@@ -1,9 +1,10 @@
-package repository
+package teamUser
 
 import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/ZoinMe/team-service/stores"
 
 	"github.com/ZoinMe/team-service/model"
 )
@@ -12,11 +13,11 @@ type TeamUserRepository struct {
 	DB *sql.DB
 }
 
-func NewTeamUserRepository(db *sql.DB) *TeamUserRepository {
+func NewTeamUserRepository(db *sql.DB) stores.TeamUser {
 	return &TeamUserRepository{DB: db}
 }
 
-func (tur *TeamUserRepository) GetAllTeamUsers(ctx context.Context) ([]*model.TeamUser, error) {
+func (tur *TeamUserRepository) GetAll(ctx context.Context) ([]*model.TeamUser, error) {
 	query := "SELECT id, team_id, user_id, join_date, role FROM team_users"
 	rows, err := tur.DB.QueryContext(ctx, query)
 	if err != nil {
@@ -46,7 +47,7 @@ func (tur *TeamUserRepository) GetAllTeamUsers(ctx context.Context) ([]*model.Te
 	return teamUsers, nil
 }
 
-func (tur *TeamUserRepository) GetTeamUserByID(ctx context.Context, id uint) (*model.TeamUser, error) {
+func (tur *TeamUserRepository) GetByID(ctx context.Context, id uint) (*model.TeamUser, error) {
 	query := "SELECT id, team_id, user_id, join_date, role FROM team_users WHERE id = ?"
 	row := tur.DB.QueryRowContext(ctx, query, id)
 
@@ -64,7 +65,7 @@ func (tur *TeamUserRepository) GetTeamUserByID(ctx context.Context, id uint) (*m
 	return &teamUser, nil
 }
 
-func (tur *TeamUserRepository) CreateTeamUser(ctx context.Context, teamUser *model.TeamUser) (*model.TeamUser, error) {
+func (tur *TeamUserRepository) Create(ctx context.Context, teamUser *model.TeamUser) (*model.TeamUser, error) {
 	query := "INSERT INTO team_users (team_id, user_id, join_date, role) VALUES (?, ?, ?, ?)"
 	result, err := tur.DB.ExecContext(ctx, query, teamUser.TeamID, teamUser.UserID, teamUser.JoinDate, teamUser.Role)
 	if err != nil {
@@ -75,7 +76,7 @@ func (tur *TeamUserRepository) CreateTeamUser(ctx context.Context, teamUser *mod
 	return teamUser, nil
 }
 
-func (tur *TeamUserRepository) DeleteTeamUser(ctx context.Context, id uint) error {
+func (tur *TeamUserRepository) Delete(ctx context.Context, id uint) error {
 	query := "DELETE FROM team_users WHERE id = ?"
 	_, err := tur.DB.ExecContext(ctx, query, id)
 	if err != nil {
