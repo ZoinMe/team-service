@@ -28,18 +28,21 @@ func main() {
 	teamUserRepo := repository.NewTeamUserRepository(db)
 	requestRepo := repository.NewRequestRepository(db)
 	techStackRepo := repository.NewTechStackRepository(db)
+	commentRepo := repository.NewCommentRepository(db)
 
 	// Initialize services
 	teamService := service.NewTeamService(teamRepo)
 	teamUserService := service.NewTeamUserService(teamUserRepo)
 	requestService := service.NewRequestService(requestRepo)
 	techStackService := service.NewTechStackService(techStackRepo)
+	commentService := service.NewCommentService(commentRepo)
 
 	// Initialize handlers
 	teamHandler := handler.NewTeamHandler(teamService)
 	teamUserHandler := handler.NewTeamUserHandler(teamUserService)
 	requestHandler := handler.NewRequestHandler(requestService)
 	techStackHandler := handler.NewTechStackHandler(techStackService)
+	commentHandler := handler.NewCommentHandler(commentService) 
 
 	// Define APIs for each entity
 	router.GET("/team", teamHandler.GetTeams)
@@ -66,6 +69,12 @@ func main() {
 	router.PUT("/techstack/:id", techStackHandler.UpdateTechStack)
 	router.DELETE("/techstack/:id", techStackHandler.DeleteTechStack)
 	router.GET("/team/:id/techstack", techStackHandler.GetTechStacksByTeamID)
+
+	router.GET("/teams/:team_id/comments", commentHandler.GetCommentsByTeamID)
+	router.GET("/comments/:id", commentHandler.GetCommentByID)
+	router.POST("/comments", commentHandler.CreateComment)
+	router.PUT("/comments/:id", commentHandler.UpdateComment)
+	router.DELETE("/comments/:id", commentHandler.DeleteComment)
 
 	// Start the server
 	port := ":8080"
