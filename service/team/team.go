@@ -20,6 +20,7 @@ func (ts *TeamService) GetAll(ctx context.Context) ([]*model.Team, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to get all teams: %v", err)
 	}
+
 	return teams, nil
 }
 
@@ -28,6 +29,7 @@ func (ts *TeamService) GetByID(ctx context.Context, id int64) (*model.Team, erro
 	if err != nil {
 		return nil, fmt.Errorf("failed to get team by ID: %v", err)
 	}
+
 	return team, nil
 }
 
@@ -36,6 +38,7 @@ func (ts *TeamService) Create(ctx context.Context, team *model.Team) (*model.Tea
 	if err != nil {
 		return nil, fmt.Errorf("failed to create team: %v", err)
 	}
+
 	return createdTeam, nil
 }
 
@@ -44,6 +47,7 @@ func (ts *TeamService) Update(ctx context.Context, updatedTeam *model.Team) (*mo
 	if err != nil {
 		return nil, fmt.Errorf("failed to update team: %v", err)
 	}
+
 	return updatedTeam, nil
 }
 
@@ -52,5 +56,6 @@ func (ts *TeamService) Delete(ctx context.Context, id int64) error {
 	if err != nil {
 		return fmt.Errorf("failed to delete team: %v", err)
 	}
+
 	return nil
 }

@@ -38,3 +38,11 @@ type Techstack interface {
 	Delete(ctx context.Context, id int64) error
 	GetTechStacksByTeamID(ctx context.Context, teamID int64) ([]*model.TechStack, error)
 }
+
+type Comment interface {
+	GetAllCommentsByTeamID(ctx context.Context, teamID int64) ([]*model.Comment, error)
+	GetByID(ctx context.Context, id int64) (*model.Comment, error)
+	Create(ctx context.Context, comment *model.Comment) (*model.Comment, error)
+	Update(ctx context.Context, updatedComment *model.Comment) (*model.Comment, error)
+	Delete(ctx context.Context, id int64) error
+}

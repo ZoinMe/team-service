@@ -20,6 +20,7 @@ func (tus *TeamUserService) GetAll(ctx context.Context) ([]*model.TeamUser, erro
 	if err != nil {
 		return nil, fmt.Errorf("failed to get all team users: %v", err)
 	}
+
 	return teamUsers, nil
 }
 
@@ -28,6 +29,7 @@ func (tus *TeamUserService) GetByID(ctx context.Context, id uint) (*model.TeamUs
 	if err != nil {
 		return nil, fmt.Errorf("failed to get team user by ID: %v", err)
 	}
+
 	return teamUser, nil
 }
 
@@ -36,6 +38,7 @@ func (tus *TeamUserService) Create(ctx context.Context, teamUser *model.TeamUser
 	if err != nil {
 		return nil, fmt.Errorf("failed to create team user: %v", err)
 	}
+
 	return createdTeamUser, nil
 }
 
@@ -44,6 +47,7 @@ func (tus *TeamUserService) Delete(ctx context.Context, id uint) error {
 	if err != nil {
 		return fmt.Errorf("failed to delete team user: %v", err)
 	}
+
 	return nil
 }
 
@@ -52,5 +56,6 @@ func (tus *TeamUserService) GetUsersByTeamID(ctx context.Context, teamID int64) 
 	if err != nil {
 		return nil, fmt.Errorf("failed to get users by team ID: %v", err)
 	}
+
 	return teamUsers, nil
 }

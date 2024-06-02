@@ -2,20 +2,24 @@ package main
 
 import (
 	"database/sql"
+	"log"
+	"net/http"
+
+	comment3 "github.com/ZoinMe/team-service/handler/comment"
 	request3 "github.com/ZoinMe/team-service/handler/request"
 	team3 "github.com/ZoinMe/team-service/handler/team"
 	teamUser3 "github.com/ZoinMe/team-service/handler/teamUser"
 	techstack3 "github.com/ZoinMe/team-service/handler/techstack"
+	comment2 "github.com/ZoinMe/team-service/service/comment"
 	request2 "github.com/ZoinMe/team-service/service/request"
 	team2 "github.com/ZoinMe/team-service/service/team"
 	teamUser2 "github.com/ZoinMe/team-service/service/teamUser"
 	techstack2 "github.com/ZoinMe/team-service/service/techstack"
+	"github.com/ZoinMe/team-service/stores/comment"
 	"github.com/ZoinMe/team-service/stores/request"
 	"github.com/ZoinMe/team-service/stores/team"
 	"github.com/ZoinMe/team-service/stores/teamUser"
 	"github.com/ZoinMe/team-service/stores/techstack"
-	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -38,18 +42,21 @@ func main() {
 	teamUserRepo := teamUser.NewTeamUserRepository(db)
 	requestRepo := request.NewRequestRepository(db)
 	techStackRepo := techstack.NewTechStackRepository(db)
+	commentRepo := comment.NewCommentRepository(db)
 
 	// Initialize services
 	teamService := team2.NewTeamService(teamRepo)
 	teamUserService := teamUser2.NewTeamUserService(teamUserRepo)
 	requestService := request2.NewRequestService(requestRepo)
 	techStackService := techstack2.NewTechStackService(techStackRepo)
+	commentService := comment2.NewCommentService(commentRepo)
 
 	// Initialize handlers
 	teamHandler := team3.NewTeamHandler(teamService)
 	teamUserHandler := teamUser3.NewTeamUserHandler(teamUserService)
 	requestHandler := request3.NewRequestHandler(requestService)
 	techStackHandler := techstack3.NewTechStackHandler(techStackService)
+	commentHandler := comment3.NewCommentHandler(commentService)
 
 	// Define APIs for each entity
 	router.GET("/team", teamHandler.GetTeams)
@@ -76,6 +83,12 @@ func main() {
 	router.PUT("/techstack/:id", techStackHandler.UpdateTechStack)
 	router.DELETE("/techstack/:id", techStackHandler.DeleteTechStack)
 	router.GET("/team/:id/techstack", techStackHandler.GetTechStacksByTeamID)
+
+	router.GET("/teams/:team_id/comments", commentHandler.GetByTeamID)
+	router.GET("/comments/:id", commentHandler.GetByID)
+	router.POST("/comments", commentHandler.Create)
+	router.PUT("/comments/:id", commentHandler.Update)
+	router.DELETE("/comments/:id", commentHandler.Delete)
 
 	// Start the server
 	port := ":8080"

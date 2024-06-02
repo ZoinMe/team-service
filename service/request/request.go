@@ -20,6 +20,7 @@ func (rs *RequestService) GetAll(ctx context.Context) ([]*model.Request, error) 
 	if err != nil {
 		return nil, fmt.Errorf("failed to get all requests: %v", err)
 	}
+
 	return requests, nil
 }
 
@@ -28,6 +29,7 @@ func (rs *RequestService) GetByID(ctx context.Context, id uint) (*model.Request,
 	if err != nil {
 		return nil, fmt.Errorf("failed to get request by ID: %v", err)
 	}
+
 	return request, nil
 }
 
@@ -36,6 +38,7 @@ func (rs *RequestService) Create(ctx context.Context, req *model.Request) (*mode
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %v", err)
 	}
+
 	return createdRequest, nil
 }
 
@@ -44,6 +47,7 @@ func (rs *RequestService) Update(ctx context.Context, updatedRequest *model.Requ
 	if err != nil {
 		return nil, fmt.Errorf("failed to update request: %v", err)
 	}
+
 	return updatedRequest, nil
 }
 
@@ -52,6 +56,7 @@ func (rs *RequestService) Delete(ctx context.Context, id uint) error {
 	if err != nil {
 		return fmt.Errorf("failed to delete request: %v", err)
 	}
+
 	return nil
 }
 
@@ -60,5 +65,6 @@ func (rs *RequestService) GetByTeamID(ctx context.Context, teamID int64) ([]*mod
 	if err != nil {
 		return nil, fmt.Errorf("failed to get requests by team ID: %v", err)
 	}
+	
 	return requests, nil
 }

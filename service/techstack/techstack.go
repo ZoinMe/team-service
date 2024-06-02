@@ -20,6 +20,7 @@ func (tss *TechStackService) GetAll(ctx context.Context) ([]*model.TechStack, er
 	if err != nil {
 		return nil, fmt.Errorf("failed to get all tech stacks: %v", err)
 	}
+
 	return techStacks, nil
 }
 
@@ -28,6 +29,7 @@ func (tss *TechStackService) GetByID(ctx context.Context, id int64) (*model.Tech
 	if err != nil {
 		return nil, fmt.Errorf("failed to get tech stack by ID: %v", err)
 	}
+
 	return techStack, nil
 }
 
@@ -36,6 +38,7 @@ func (tss *TechStackService) Create(ctx context.Context, techStack *model.TechSt
 	if err != nil {
 		return nil, fmt.Errorf("failed to create tech stack: %v", err)
 	}
+
 	return createdTechStack, nil
 }
 
@@ -44,6 +47,7 @@ func (tss *TechStackService) Update(ctx context.Context, updatedTechStack *model
 	if err != nil {
 		return nil, fmt.Errorf("failed to update tech stack: %v", err)
 	}
+
 	return updatedTechStack, nil
 }
 
@@ -52,6 +56,7 @@ func (tss *TechStackService) Delete(ctx context.Context, id int64) error {
 	if err != nil {
 		return fmt.Errorf("failed to delete tech stack: %v", err)
 	}
+
 	return nil
 }
 
@@ -60,5 +65,6 @@ func (tss *TechStackService) GetTechStacksByTeamID(ctx context.Context, teamID i
 	if err != nil {
 		return nil, fmt.Errorf("failed to get tech stacks by team ID: %v", err)
 	}
+
 	return techStacks, nil
 }

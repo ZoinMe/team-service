@@ -48,3 +48,13 @@ type TechStack struct {
 	Technology string `json:"technology"`
 	TeamID     int64  `json:"team_id"`
 }
+
+type Comment struct {
+	ID        int64     `json:"id"`
+	UserID    int64     `json:"user_id"`
+	TeamID    int64     `json:"team_id"`
+	Text      string    `json:"text"`
+	ParentID  *int64    `json:"parent_id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
