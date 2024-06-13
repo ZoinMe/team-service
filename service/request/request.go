@@ -3,12 +3,18 @@ package request
 import (
 	"context"
 	"fmt"
+
 	"github.com/ZoinMe/team-service/model"
+	pb "github.com/ZoinMe/team-service/proto"
 	"github.com/ZoinMe/team-service/stores"
 )
 
 type RequestService struct {
 	requestRepository stores.Request
+}
+
+type Server struct {
+	pb.UnimplementedRequestCommentServiceServer
 }
 
 func NewRequestService(requestRepository stores.Request) *RequestService {
@@ -65,6 +71,6 @@ func (rs *RequestService) GetByTeamID(ctx context.Context, teamID int64) ([]*mod
 	if err != nil {
 		return nil, fmt.Errorf("failed to get requests by team ID: %v", err)
 	}
-	
+
 	return requests, nil
 }
