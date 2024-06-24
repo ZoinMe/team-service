@@ -3,6 +3,7 @@ package teamUser
 import (
 	"context"
 	"fmt"
+
 	"github.com/ZoinMe/team-service/model"
 	"github.com/ZoinMe/team-service/stores"
 )
@@ -58,4 +59,13 @@ func (tus *TeamUserService) GetUsersByTeamID(ctx context.Context, teamID int64) 
 	}
 
 	return teamUsers, nil
+}
+
+func (tus *TeamUserService) GetTeamsByUserID(ctx context.Context, userID int64) ([]*model.Team, error) {
+	teams, err := tus.teamUserRepository.GetTeamsByUserID(ctx, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get teams by user ID: %v", err)
+	}
+
+	return teams, nil
 }

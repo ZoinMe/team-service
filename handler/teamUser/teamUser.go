@@ -1,9 +1,10 @@
 package teamUser
 
 import (
-	"github.com/ZoinMe/team-service/service/teamUser"
 	"net/http"
 	"strconv"
+
+	"github.com/ZoinMe/team-service/service/teamUser"
 
 	"github.com/ZoinMe/team-service/model"
 	"github.com/gin-gonic/gin"
@@ -75,4 +76,22 @@ func (tuh *TeamUserHandler) GetUsersByTeamID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, teamUsers)
+}
+
+func (tuh *TeamUserHandler) GetTeamsByUserID(c *gin.Context) {
+	userIDStr := c.Param("id")
+
+	userID, err := strconv.ParseInt(userIDStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	teams, err := tuh.teamUserService.GetTeamsByUserID(c.Request.Context(), userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, teams)
 }

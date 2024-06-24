@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
 	"github.com/ZoinMe/team-service/stores"
 
 	"github.com/ZoinMe/team-service/model"
@@ -118,4 +119,36 @@ func (tur *TeamUserRepository) GetUsersByTeamID(ctx context.Context, teamID int6
 	}
 
 	return teamUsers, nil
+}
+
+func (tur *TeamUserRepository) GetTeamsByUserID(ctx context.Context, userID int64) ([]*model.Team, error) {
+	query := `
+        SELECT t.id, t.name, t.description, t.bio, t.profile_image_url, t.created_at, t.updated_at
+        FROM teams t
+        JOIN team_users tu ON t.id = tu.team_id
+        WHERE tu.user_id = ?
+    `
+
+	rows, err := tur.DB.QueryContext(ctx, query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get teams by user ID: %v", err)
+	}
+
+	defer rows.Close()
+
+	var teams []*model.Team
+
+	for rows.Next() {
+		var team model.Team
+		if err := rows.Scan(&team.ID, &team.Name, &team.Description, &team.Bio, &team.ProfileImageURL, &team.CreatedAt, &team.UpdatedAt); err != nil {
+			return nil, fmt.Errorf("failed to scan team row: %v", err)
+		}
+		teams = append(teams, &team)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error reading team rows: %v", err)
+	}
+
+	return teams, nil
 }

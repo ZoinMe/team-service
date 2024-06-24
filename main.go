@@ -129,6 +129,7 @@ func main() {
 	router.POST("/teamuser", teamUserHandler.AddUserToTeam)
 	router.DELETE("/teamuser/:id", teamUserHandler.RemoveUserFromTeam)
 	router.GET("/team/:id/user", teamUserHandler.GetUsersByTeamID)
+	router.GET("/user/:id/team", teamUserHandler.GetTeamsByUserID)
 
 	router.GET("/request", requestHandler.GetRequests)
 	router.GET("/request/:id", requestHandler.GetRequestByID)
