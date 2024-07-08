@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/ZoinMe/team-service/stores"
 	"time"
+
+	"github.com/ZoinMe/team-service/stores"
 
 	"github.com/ZoinMe/team-service/model"
 )
@@ -75,13 +76,10 @@ func (rr *RequestRepository) Create(ctx context.Context, req *model.Request) (*m
 
 	query := "INSERT INTO requests (user_id, team_id, status, sent_at) VALUES (?, ?, ?, ?)"
 
-	result, err := rr.DB.ExecContext(ctx, query, req.UserID, req.TeamID, req.Status, req.SentAt)
+	_, err := rr.DB.ExecContext(ctx, query, req.UserID, req.TeamID, req.Status, req.SentAt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %v", err)
 	}
-
-	reqID, _ := result.LastInsertId()
-	req.ID = reqID
 
 	return req, nil
 }
@@ -109,7 +107,7 @@ func (rr *RequestRepository) Delete(ctx context.Context, id uint) error {
 }
 
 func (rr *RequestRepository) GetByTeamID(ctx context.Context, teamID int64) ([]*model.Request, error) {
-	query := "SELECT id, user_id, team_id, status, sent_at FROM requests WHERE team_id = ?"
+	query := "SELECT id, user_id, team_id, status, sent_at FROM requests WHERE status = 'Pending' AND team_id = ?"
 
 	rows, err := rr.DB.QueryContext(ctx, query, teamID)
 	if err != nil {

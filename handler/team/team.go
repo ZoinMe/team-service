@@ -62,11 +62,7 @@ func (h *TeamHandler) CreateTeam(c *gin.Context) {
 }
 
 func (h *TeamHandler) UpdateTeam(c *gin.Context) {
-	teamID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid team ID"})
-		return
-	}
+	teamID := c.Param("id")
 
 	var updatedTeam model.Team
 
@@ -75,7 +71,7 @@ func (h *TeamHandler) UpdateTeam(c *gin.Context) {
 		return
 	}
 
-	updatedTeam.ID = int64(teamID)
+	updatedTeam.ID = teamID
 
 	team, err := h.teamService.Update(c.Request.Context(), &updatedTeam)
 	if err != nil {

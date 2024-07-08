@@ -72,13 +72,10 @@ func (tur *TeamUserRepository) GetByID(ctx context.Context, id uint) (*model.Tea
 
 func (tur *TeamUserRepository) Create(ctx context.Context, teamUser *model.TeamUser) (*model.TeamUser, error) {
 	query := "INSERT INTO team_users (team_id, user_id, join_date, role) VALUES (?, ?, ?, ?)"
-	result, err := tur.DB.ExecContext(ctx, query, teamUser.TeamID, teamUser.UserID, teamUser.JoinDate, teamUser.Role)
+	_, err := tur.DB.ExecContext(ctx, query, teamUser.TeamID, teamUser.UserID, teamUser.JoinDate, teamUser.Role)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create team user: %v", err)
 	}
-
-	teamUserID, _ := result.LastInsertId()
-	teamUser.ID = teamUserID
 
 	return teamUser, nil
 }
@@ -94,7 +91,7 @@ func (tur *TeamUserRepository) Delete(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (tur *TeamUserRepository) GetUsersByTeamID(ctx context.Context, teamID int64) ([]*model.TeamUser, error) {
+func (tur *TeamUserRepository) GetUsersByTeamID(ctx context.Context, teamID string) ([]*model.TeamUser, error) {
 	query := "SELECT id, user_id, team_id, join_date, role FROM team_users WHERE team_id = ?"
 
 	rows, err := tur.DB.QueryContext(ctx, query, teamID)
@@ -121,7 +118,7 @@ func (tur *TeamUserRepository) GetUsersByTeamID(ctx context.Context, teamID int6
 	return teamUsers, nil
 }
 
-func (tur *TeamUserRepository) GetTeamsByUserID(ctx context.Context, userID int64) ([]*model.Team, error) {
+func (tur *TeamUserRepository) GetTeamsByUserID(ctx context.Context, userID string) ([]*model.Team, error) {
 	query := `
         SELECT t.id, t.name, t.description, t.bio, t.profile_image_url, t.created_at, t.updated_at
         FROM teams t

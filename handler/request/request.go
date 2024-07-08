@@ -2,9 +2,10 @@ package request
 
 import (
 	"fmt"
-	"github.com/ZoinMe/team-service/service/request"
 	"net/http"
 	"strconv"
+
+	"github.com/ZoinMe/team-service/service/request"
 
 	"github.com/ZoinMe/team-service/model"
 	"github.com/gin-gonic/gin"
@@ -62,11 +63,7 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 }
 
 func (h *RequestHandler) UpdateRequest(c *gin.Context) {
-	requestID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request ID"})
-		return
-	}
+	requestID := c.Param("id")
 
 	var updatedReq model.Request
 
@@ -75,7 +72,7 @@ func (h *RequestHandler) UpdateRequest(c *gin.Context) {
 		return
 	}
 
-	updatedReq.ID = int64(requestID)
+	updatedReq.ID = requestID
 
 	req, err := h.requestService.Update(c.Request.Context(), &updatedReq)
 	if err != nil {

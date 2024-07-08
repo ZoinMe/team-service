@@ -68,12 +68,8 @@ func (h *CommentHandler) Create(c *gin.Context) {
 }
 
 func (h *CommentHandler) Update(c *gin.Context) {
-	commentID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid comment ID"})
-		return
-	}
-
+	commentID :=c.Param("id")
+	
 	var updatedComment model.Comment
 
 	if err := c.ShouldBindJSON(&updatedComment); err != nil {
@@ -81,7 +77,7 @@ func (h *CommentHandler) Update(c *gin.Context) {
 		return
 	}
 
-	updatedComment.ID = int64(commentID)
+	updatedComment.ID = commentID
 
 	comment, err := h.commentService.Update(c.Request.Context(), &updatedComment)
 	if err != nil {

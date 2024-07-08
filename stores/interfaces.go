@@ -28,8 +28,8 @@ type TeamUser interface {
 	GetByID(ctx context.Context, id uint) (*model.TeamUser, error)
 	Create(ctx context.Context, teamUser *model.TeamUser) (*model.TeamUser, error)
 	Delete(ctx context.Context, id uint) error
-	GetUsersByTeamID(ctx context.Context, teamID int64) ([]*model.TeamUser, error)
-	GetTeamsByUserID(ctx context.Context, userID int64) ([]*model.Team, error)
+	GetUsersByTeamID(ctx context.Context, teamID string) ([]*model.TeamUser, error)
+	GetTeamsByUserID(ctx context.Context, userID string) ([]*model.Team, error)
 }
 
 type Techstack interface {

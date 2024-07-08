@@ -52,7 +52,7 @@ func (tus *TeamUserService) Delete(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (tus *TeamUserService) GetUsersByTeamID(ctx context.Context, teamID int64) ([]*model.TeamUser, error) {
+func (tus *TeamUserService) GetUsersByTeamID(ctx context.Context, teamID string) ([]*model.TeamUser, error) {
 	teamUsers, err := tus.teamUserRepository.GetUsersByTeamID(ctx, teamID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get users by team ID: %v", err)
@@ -61,7 +61,7 @@ func (tus *TeamUserService) GetUsersByTeamID(ctx context.Context, teamID int64) 
 	return teamUsers, nil
 }
 
-func (tus *TeamUserService) GetTeamsByUserID(ctx context.Context, userID int64) ([]*model.Team, error) {
+func (tus *TeamUserService) GetTeamsByUserID(ctx context.Context, userID string) ([]*model.Team, error) {
 	teams, err := tus.teamUserRepository.GetTeamsByUserID(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get teams by user ID: %v", err)

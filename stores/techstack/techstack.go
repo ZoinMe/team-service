@@ -69,13 +69,10 @@ func (tr *TechStackRepository) GetByID(ctx context.Context, id int64) (*model.Te
 func (tr *TechStackRepository) Create(ctx context.Context, techStack *model.TechStack) (*model.TechStack, error) {
 	query := "INSERT INTO tech_stacks (technology, team_id) VALUES (?, ?)"
 
-	result, err := tr.DB.ExecContext(ctx, query, techStack.Technology, techStack.TeamID)
+	_, err := tr.DB.ExecContext(ctx, query, techStack.Technology, techStack.TeamID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create tech stack: %v", err)
 	}
-
-	techStackID, _ := result.LastInsertId()
-	techStack.ID = techStackID
 
 	return techStack, nil
 }

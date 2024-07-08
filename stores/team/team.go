@@ -80,13 +80,11 @@ func (tr *TeamRepository) Create(ctx context.Context, team *model.Team) (*model.
 
 	query := "INSERT INTO teams (name, bio, profile_image_url, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)"
 
-	result, err := tr.DB.ExecContext(ctx, query, team.Name, team.Bio, team.ProfileImageURL, team.Description, team.CreatedAt, team.UpdatedAt)
+	_, err := tr.DB.ExecContext(ctx, query, team.Name, team.Bio, team.ProfileImageURL, team.Description, team.CreatedAt, team.UpdatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create team: %v", err)
 	}
 
-	teamID, _ := result.LastInsertId()
-	team.ID = teamID
 
 	return team, nil
 }

@@ -63,13 +63,7 @@ func (h *TeamUserHandler) RemoveUserFromTeam(c *gin.Context) {
 func (tuh *TeamUserHandler) GetUsersByTeamID(c *gin.Context) {
 	teamIDStr := c.Param("id")
 
-	teamID, err := strconv.ParseInt(teamIDStr, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid team ID"})
-		return
-	}
-
-	teamUsers, err := tuh.teamUserService.GetUsersByTeamID(c.Request.Context(), teamID)
+	teamUsers, err := tuh.teamUserService.GetUsersByTeamID(c.Request.Context(), teamIDStr)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -81,13 +75,7 @@ func (tuh *TeamUserHandler) GetUsersByTeamID(c *gin.Context) {
 func (tuh *TeamUserHandler) GetTeamsByUserID(c *gin.Context) {
 	userIDStr := c.Param("id")
 
-	userID, err := strconv.ParseInt(userIDStr, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
-
-	teams, err := tuh.teamUserService.GetTeamsByUserID(c.Request.Context(), userID)
+	teams, err := tuh.teamUserService.GetTeamsByUserID(c.Request.Context(), userIDStr)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

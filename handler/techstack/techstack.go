@@ -62,12 +62,8 @@ func (h *TechStackHandler) CreateTechStack(c *gin.Context) {
 }
 
 func (h *TechStackHandler) UpdateTechStack(c *gin.Context) {
-	techStackID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tech stack ID"})
-		return
-	}
-
+	techStackID:=c.Param("id")
+	
 	var updatedTechStack model.TechStack
 
 	if err := c.ShouldBindJSON(&updatedTechStack); err != nil {
@@ -75,7 +71,7 @@ func (h *TechStackHandler) UpdateTechStack(c *gin.Context) {
 		return
 	}
 
-	updatedTechStack.ID = int64(techStackID)
+	updatedTechStack.ID = techStackID
 
 	techStack, err := h.techStackService.Update(c.Request.Context(), &updatedTechStack)
 	if err != nil {

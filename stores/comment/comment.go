@@ -18,7 +18,7 @@ func NewCommentRepository(db *sql.DB) *CommentRepository {
 }
 
 func (cr *CommentRepository) GetAllCommentsByTeamID(ctx context.Context, teamID int64) ([]*model.Comment, error) {
-	query := "SELECT id, userid, teamid, text, parentid, created_at, updated_at FROM comments WHERE teamid = ?"
+	query := "SELECT id, user_id, team_id, text, parent_id, created_at, updated_at FROM comments WHERE team_id = ?"
 	rows, err := cr.DB.QueryContext(ctx, query, teamID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get comments by team ID: %v", err)
@@ -74,13 +74,10 @@ func (cr *CommentRepository) Create(ctx context.Context, comment *model.Comment)
 	comment.UpdatedAt = time.Now()
 
 	query := "INSERT INTO comments (userid, teamid, text, parentid, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)"
-	result, err := cr.DB.ExecContext(ctx, query, comment.UserID, comment.TeamID, comment.Text, comment.ParentID, comment.CreatedAt, comment.UpdatedAt)
+	_, err := cr.DB.ExecContext(ctx, query, comment.UserID, comment.TeamID, comment.Text, comment.ParentID, comment.CreatedAt, comment.UpdatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create comment: %v", err)
 	}
-
-	commentID, _ := result.LastInsertId()
-	comment.ID = commentID
 
 	return comment, nil
 }

@@ -10,7 +10,7 @@ const (
 )
 
 type Team struct {
-	ID              int64     `json:"id"`
+	ID              string     `json:"id"`
 	Name            string    `json:"name"`
 	Description     string    `json:"description"`
 	Bio             string    `json:"bio"`
@@ -20,9 +20,9 @@ type Team struct {
 }
 
 type TeamUser struct {
-	ID       int64     `json:"id"`
-	UserID   int64     `json:"user_id"`
-	TeamID   int64     `json:"team_id"`
+	ID       string     `json:"id"`
+	UserID   string     `json:"user_id"`
+	TeamID   string     `json:"team_id"`
 	JoinDate time.Time `json:"join_date"`
 	Role     UserRole  `json:"role"`
 }
@@ -31,30 +31,30 @@ type RequestStatus string
 
 const (
 	StatusPending  RequestStatus = "Pending"
-	StatusApproved RequestStatus = "Approved"
 	StatusRejected RequestStatus = "Rejected"
 )
 
 type Request struct {
-	ID     int64         `json:"id"`
-	UserID int64         `json:"user_id"`
-	TeamID int64         `json:"team_id"`
+	ID     string         `json:"id"`
+	UserID string         `json:"user_id"`
+	TeamID string         `json:"team_id"`
 	Status RequestStatus `json:"status"`
 	SentAt time.Time     `json:"sent_at"`
 }
 
 type TechStack struct {
-	ID         int64  `json:"id"`
+	ID         string  `json:"id"`
 	Technology string `json:"technology"`
-	TeamID     int64  `json:"team_id"`
+	TeamID     string  `json:"team_id"`
 }
 
 type Comment struct {
-	ID        int64     `json:"id"`
-	UserID    int64     `json:"user_id"`
-	TeamID    int64     `json:"team_id"`
+	ID        string     `json:"id"`
+	UserID    string     `json:"user_id"`
+	TeamID    string     `json:"team_id"`
 	Text      string    `json:"text"`
-	ParentID  *int64    `json:"parent_id"`
+	ParentID  *string    `json:"parent_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
